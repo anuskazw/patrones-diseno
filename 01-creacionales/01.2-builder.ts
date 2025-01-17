@@ -49,27 +49,27 @@ class QueryBuilder {
   }
 
   select(...fields: string[]): QueryBuilder {
-    if(fields?.length > 0){
-      this.fields = fields;
-    } else {
-      this.fields.push('*');
-    }
+    // if(fields?.length > 0){
+    //   this.fields = fields;
+    // } else {
+    //   this.fields.push('*');
+    // }
+    this.fields = fields.length > 0 ? fields: ['*'];
     return this;
   }
 
   where(condition: string): QueryBuilder {
-    console.log(condition);
-    console.log(this.fields);
-    // SI NO SE PASA NINGUNA CONDICION, NO SE HACE NADA
-    if(condition === '' || !condition) return this;
-    // SI SE PASA UNA CONDICION, SE COMPRUEBA SI CONTIENE YA UN WHERE O NO, PARA METERLE WHERE O AND
-    // this.conditions.push(condition);
-    const primerWhere = this.conditions.findIndex((q: string) => q.toLocaleUpperCase().includes('WHERE')) === -1;
-    if(primerWhere){
-      this.conditions.push('WHERE', condition)
-    } else {
-      this.conditions.push('AND', condition);
-    }
+    // // SI NO SE PASA NINGUNA CONDICION, NO SE HACE NADA
+    // if(condition === '' || !condition) return this;
+    // // SI SE PASA UNA CONDICION, SE COMPRUEBA SI CONTIENE YA UN WHERE O NO, PARA METERLE WHERE O AND
+    // // this.conditions.push(condition);
+    // const primerWhere = this.conditions.findIndex((q: string) => q.toLocaleUpperCase().includes('WHERE')) === -1;
+    // if(primerWhere){
+    //   this.conditions.push('WHERE', condition)
+    // } else {
+    //   this.conditions.push('AND', condition);
+    // }
+    this.conditions.push(condition); 
     return this;
   }
 
@@ -87,12 +87,12 @@ class QueryBuilder {
   }
 
   execute(): string {
-    const query = `SELECT 
-    ${this.fields.join(', ')} 
-    FROM ${this.table} 
-    ${this.conditions.length>0 ? this.conditions.join(' '):''}
-    ${this.orderFields.length>0? 'ORDER BY ' + this.orderFields.join(', ')+' ':''}
-    ${!!this.limitCount && 'LIMIT '+this.limitCount}`
+    const fields = this.fields.join(', ');
+    const conditions = `${this.conditions.length > 0 ? 'WHERE ' + this.conditions.join(' AND ') : ''}`;
+    const order = `${this.orderFields.length>0? 'ORDER BY ' + this.orderFields.join(', ')+' ':''}`;
+    const limit = `${!!this.limitCount && 'LIMIT '+this.limitCount}`;
+
+    const query = `SELECT ${fields} FROM ${this.table} ${conditions} ${order} ${limit}`
     // Select id, name, email from users where age > 18 and country = 'Cri' order by name ASC limit 10;
     return query;
   }
@@ -101,10 +101,11 @@ class QueryBuilder {
 function main() {
   const usersQuery = new QueryBuilder('users')
     .select('id', 'name', 'email')
-    .where('age > 18')
-    .where("country = 'Cri'") // Esto debe de hacer una condición AND
+    // .where('age > 18')
+    // .where("country = 'Cri'") // Esto debe de hacer una condición AND
     .orderBy('name', 'ASC')
-    .limit(10)
+    .orderBy('age', 'DESC')
+    .limit(20)
     .execute();
 
    /* SELECT id, name, email FROM users WHERE age > 18 AND country = 'Cri' ORDER BY name ASC LIMIT 10 */
