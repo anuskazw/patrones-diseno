@@ -37,7 +37,6 @@ import { COLORS } from '../helpers/colors.ts';
  */
 
 //! Solución
-
 class QueryBuilder {
   private table: string;
   private fields: string[] = [];
@@ -50,24 +49,52 @@ class QueryBuilder {
   }
 
   select(...fields: string[]): QueryBuilder {
-    throw new Error('Method not implemented.');
+    if(fields?.length > 0){
+      this.fields = fields;
+    } else {
+      this.fields.push('*');
+    }
+    return this;
   }
 
   where(condition: string): QueryBuilder {
-    throw new Error('Method not implemented.');
+    console.log(condition);
+    console.log(this.fields);
+    // SI NO SE PASA NINGUNA CONDICION, NO SE HACE NADA
+    if(condition === '' || !condition) return this;
+    // SI SE PASA UNA CONDICION, SE COMPRUEBA SI CONTIENE YA UN WHERE O NO, PARA METERLE WHERE O AND
+    // this.conditions.push(condition);
+    const primerWhere = this.conditions.findIndex((q: string) => q.toLocaleUpperCase().includes('WHERE')) === -1;
+    if(primerWhere){
+      this.conditions.push('WHERE', condition)
+    } else {
+      this.conditions.push('AND', condition);
+    }
+    return this;
   }
 
   orderBy(field: string, direction: 'ASC' | 'DESC' = 'ASC'): QueryBuilder {
-    throw new Error('Method not implemented.');
+        // SI NO SE PASA NINGUNA VALOR, NO SE HACE NADA
+        if(field === '' || !field) return this;
+        this.orderFields.push(`${field} ${direction}`);
+        return this;
   }
 
   limit(count: number): QueryBuilder {
-    throw new Error('Method not implemented.');
+    if(!count || isNaN(count)) return this;
+    this.limitCount = count;
+    return this;
   }
 
   execute(): string {
+    const query = `SELECT 
+    ${this.fields.join(', ')} 
+    FROM ${this.table} 
+    ${this.conditions.length>0 ? this.conditions.join(' '):''}
+    ${this.orderFields.length>0? 'ORDER BY ' + this.orderFields.join(', ')+' ':''}
+    ${!!this.limitCount && 'LIMIT '+this.limitCount}`
     // Select id, name, email from users where age > 18 and country = 'Cri' order by name ASC limit 10;
-    throw new Error('Method not implemented.');
+    return query;
   }
 }
 
@@ -80,6 +107,7 @@ function main() {
     .limit(10)
     .execute();
 
+   /* SELECT id, name, email FROM users WHERE age > 18 AND country = 'Cri' ORDER BY name ASC LIMIT 10 */
   console.log('%cConsulta:\n', COLORS.red);
   console.log(usersQuery);
 }
