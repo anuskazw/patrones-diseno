@@ -46,19 +46,19 @@ abstract class Restaurant {
 }
 
 class ChickenRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new ChickenHamburger();
     }
 }
 
 class BeefRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new BeefHamburger();
     }
 }
 
 class FrijolRestaurant extends Restaurant{
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new FrijolHamburger();
     }
 }

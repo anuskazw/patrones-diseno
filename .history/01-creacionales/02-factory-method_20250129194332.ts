@@ -46,19 +46,19 @@ abstract class Restaurant {
 }
 
 class ChickenRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new ChickenHamburger();
     }
 }
 
 class BeefRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new BeefHamburger();
     }
 }
 
 class FrijolRestaurant extends Restaurant{
-    override createHamburger(): Hamburger {
+    createHamburger(): Hamburger {
         return new FrijolHamburger();
     }
 }
@@ -74,10 +74,9 @@ function main() {
         case 'chicken':     restaurant = new ChickenRestaurant();   break;
         case 'beef':        restaurant = new BeefRestaurant();      break;
         case 'bean':        restaurant = new FrijolRestaurant();    break; 
+
         default: throw new Error('Opción no válida');
     }
-
-    restaurant.orderHamburger();
 
 }
 main();

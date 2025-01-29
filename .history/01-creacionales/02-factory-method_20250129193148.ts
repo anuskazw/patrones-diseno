@@ -13,26 +13,10 @@
  *
  */
 
-import { COLORS } from '../helpers/colors.ts';
+import {COLORS} from '../helpers/colors';
 
 interface Hamburger {
     prepare(): void;
-}
-
-class BeefHamburger implements Hamburger {
-    prepare(): void {
-        console.log('Preparando una hamburguesa de %cCarne', COLORS.brown);
-    }
-}
-class ChickenHamburger implements Hamburger {
-    prepare(): void {
-        console.log('Preparando una hamburguesa de %cPollo', COLORS.yellow);
-    }    
-}
-class FrijolHamburger implements Hamburger {
-    prepare(): void {
-        console.log('Preparando una hamburguesa de %cFrijoles', COLORS.green);
-    }
 }
 
 abstract class Restaurant {
@@ -45,39 +29,38 @@ abstract class Restaurant {
     }
 }
 
-class ChickenRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
-        return new ChickenHamburger();
+class BeefRestaurant implements Hamburger {
+    prepare(): void {
+        console.log('Preparando una hamburguesa de %cCarne', COLORS.brown);
+    }
+}
+class ChickenRestaurant implements Hamburger {
+    prepare(): void {
+        console.log('Preparando una hamburguesa de %cPollo', COLORS.yellow);
+    }    
+}
+class FrijolRestaurant implements Hamburger {
+    prepare(): void {
+        console.log('Preparando una hamburguesa de %cFrijoles', COLORS.green);
     }
 }
 
-class BeefRestaurant extends Restaurant {
-    override createHamburger(): Hamburger {
-        return new BeefHamburger();
-    }
-}
 
-class FrijolRestaurant extends Restaurant{
-    override createHamburger(): Hamburger {
-        return new FrijolHamburger();
-    }
-}
 
 function main() {
 
     console.log('hola')
 
-    let restaurant: Restaurant;
+    let restaurant: Hamburger;
 
     const burgerType = prompt('¿qué tipo de hamburguesa quieres? (beef/chicken/bean)');
     switch (burgerType) {
         case 'chicken':     restaurant = new ChickenRestaurant();   break;
         case 'beef':        restaurant = new BeefRestaurant();      break;
         case 'bean':        restaurant = new FrijolRestaurant();    break; 
+
         default: throw new Error('Opción no válida');
     }
-
-    restaurant.orderHamburger();
 
 }
 main();
