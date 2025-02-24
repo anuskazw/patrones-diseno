@@ -10,35 +10,51 @@
  * https://refactoring.guru/es/design-patterns/prototype
  */
 
+
 class Documento {
     public title: string;
     private content: string;
     public author: string;
 
-    constructor(title: string, content: string, author: string) {
+    constructor(title: string, content: string, author: string){
         this.title = title;
         this.content = content;
         this.author = author;
     }
 
-    displayInfo() {
-        console.log(`Title: ${this.title}`);
-        console.log(`Content: ${this.content}`);
-        console.log(`Author: ${this.author}`);
+    clone(): Documento {
+        return new Documento(this.title, this.content, this.author);
     }
+
+    displayContent(){
+        console.log(`
+            Title: ${this.title}
+            Content: ${this.content}
+            Author: ${this.author}
+        `);
+    }
+
 }
 
+function main(){
 
-function main() {
-    const doc1 = new Documento('Documento 1', 'Content 1', 'Author 1');
+    const prueba1 = new Documento('Prueba1', 'Contenido1', 'Ana');
+    console.log(prueba1);
+    prueba1.displayContent();
 
-    console.log({doc1});
-    doc1.displayInfo();
+    const prueba2 = {...prueba1};
+    console.log(prueba2);
+    // prueba2.displayContent(); // error porque no existe, se ha perdido el ADN.
 
-    const doc2 = {...doc1}; // Se pierde su ADN
-    doc2.title = 'Nuevo titulo';
+    const prueba3 = structuredClone(prueba1);
+    console.log(prueba3);
+    // prueba3.displayContent(); // error, porque no existe, se ha perdido el ADN.
 
-
+    const prueba4 = prueba1.clone();
+    console.log(prueba4);
+    prueba4.displayContent(); // Clonado con éxito.
+    
+    
 }
 
 main();
